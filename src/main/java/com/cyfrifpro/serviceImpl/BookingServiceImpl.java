@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.cyfrifpro.DTO.BookingAssociationDTO;
 import com.cyfrifpro.DTO.BookingDTO;
 import com.cyfrifpro.DTO.BookingItemDTO;
+import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.Exception.ResourceNotFoundException;
 import com.cyfrifpro.model.Booking;
@@ -252,8 +253,16 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<BookingDTO> getAllBookings() {
 		List<Booking> bookings = bookingRepository.findAll();
-		return bookings.stream().map(booking -> modelMapper.map(booking, BookingDTO.class))
-				.collect(Collectors.toList());
+		return bookings.stream().map(booking -> {
+			BookingDTO dto = modelMapper.map(booking, BookingDTO.class);
+			dto.setBookingItems(booking.getBookingItems().stream().map(item -> {
+				BookingItemDTO itemDto = modelMapper.map(item, BookingItemDTO.class);
+				// Map full temple details
+				itemDto.setTemple(modelMapper.map(item.getTemple(), TempleDetailsDTO.class));
+				return itemDto;
+			}).collect(Collectors.toList()));
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
 	@Override
