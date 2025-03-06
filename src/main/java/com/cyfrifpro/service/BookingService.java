@@ -27,6 +27,8 @@ public interface BookingService {
 
 	BookingDTO getBookingById(Long bookingId);
 
+	List<BookingDTO> getBookingsByClientId(Long clientId);
+
 	List<BookingDTO> getAllBookings();
 
 	UserDTO getAssignedGuideDetails(Long bookingId);

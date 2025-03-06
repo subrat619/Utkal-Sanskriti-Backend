@@ -89,6 +89,13 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
+	public List<BookingDTO> getBookingsByClientId(Long clientId) {
+		List<Booking> bookings = bookingRepository.findByClient_UserId(clientId);
+		return bookings.stream().map(booking -> modelMapper.map(booking, BookingDTO.class))
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public BookingDTO updateBooking(Long bookingId, BookingDTO bookingDTO) {
 		logger.info("Updating booking with id: {}", bookingId);
 		Booking existingBooking = bookingRepository.findById(bookingId)

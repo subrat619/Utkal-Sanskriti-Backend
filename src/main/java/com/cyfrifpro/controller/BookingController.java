@@ -57,6 +57,12 @@ public class BookingController {
 		return ResponseEntity.ok(booking);
 	}
 
+	@GetMapping("/client/{clientId}")
+	public ResponseEntity<List<BookingDTO>> getBookingsByClientId(@PathVariable Long clientId) {
+		List<BookingDTO> bookings = bookingService.getBookingsByClientId(clientId);
+		return ResponseEntity.ok(bookings);
+	}
+
 	// Get all bookings
 	@GetMapping
 	public ResponseEntity<List<BookingDTO>> getAllBookings() {
