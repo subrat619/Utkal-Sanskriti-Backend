@@ -111,22 +111,28 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public BookingDTO updateBookingByTopLevel(Long bookingId, BookingDTO bookingDTO, Long topLevelId) {
 		logger.info("Top Level {} updating booking with id: {}", topLevelId, bookingId);
+
+		// Fetch the booking by its ID.
 		Booking booking = bookingRepository.findById(bookingId)
 				.orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingId", bookingId));
 
-		// Update booking date (and any other fields as required)
-		booking.setBookingDate(bookingDTO.getBookingDate());
+		// Update booking date if provided.
+		if (bookingDTO.getBookingDate() != null) {
+			booking.setBookingDate(bookingDTO.getBookingDate());
+		}
 
-		// Set booking status to UPDATE_BY_TOP_LEVEL
+		// Set booking status to UPDATE_BY_TOP_LEVEL.
 		booking.setStatus(BookingStatus.UPDATE_BY_TOP_LEVEL);
 
-		// Retrieve team leader and set updatedBy field
+		// Retrieve and set the top level user.
 		User topLevel = userRepository.findById(topLevelId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "topLevelId", topLevelId));
 		booking.setTopLevel(topLevel);
 
-		// Update mid level user if provided in the DTO
-		if (bookingDTO.getUpdatedByMidLevel() != null) {
+		// Ensure that updatedByMidLevel id is provided.
+		if (bookingDTO.getUpdatedByMidLevel() == null) {
+			throw new IllegalArgumentException("The updatedByMidLevel id must be provided.");
+		} else {
 			User midLevel = userRepository.findById(bookingDTO.getUpdatedByMidLevel()).orElseThrow(
 					() -> new ResourceNotFoundException("User", "midLevelId", bookingDTO.getUpdatedByMidLevel()));
 			booking.setMidLevel(midLevel);
@@ -145,7 +151,11 @@ public class BookingServiceImpl implements BookingService {
 				.orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingId", bookingId));
 
 		// Update booking date (and any other fields as required)
-		booking.setBookingDate(bookingDTO.getBookingDate());
+//		booking.setBookingDate(bookingDTO.getBookingDate());
+		// Update booking date if provided.
+		if (bookingDTO.getBookingDate() != null) {
+			booking.setBookingDate(bookingDTO.getBookingDate());
+		}
 
 		// Set booking status to UPDATE_BY_TOP_LEVEL
 		booking.setStatus(BookingStatus.UPDATE_BY_MID_LEVEL);
@@ -175,7 +185,11 @@ public class BookingServiceImpl implements BookingService {
 				.orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingId", bookingId));
 
 		// Update booking date (and any other fields as required)
-		booking.setBookingDate(bookingDTO.getBookingDate());
+//		booking.setBookingDate(bookingDTO.getBookingDate());
+		// Update booking date if provided.
+		if (bookingDTO.getBookingDate() != null) {
+			booking.setBookingDate(bookingDTO.getBookingDate());
+		}
 
 		// Set booking status to UPDATE_BY_TOP_LEVEL
 		booking.setStatus(BookingStatus.UPDATED_BY_TEAM_LEADER);

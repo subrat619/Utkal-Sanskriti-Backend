@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
 
 public interface TempleDetailsService {
@@ -23,5 +24,9 @@ public interface TempleDetailsService {
 	List<TempleDetailsDTO> getTemplesByDistrict(String districtName);
 
 	List<TempleDetailsDTO> getTempleDetailsByDistrictNames(Collection<String> districtNames);
+
+	List<TempleDetailsDTO> searchTemplesByName(String name);
+
+	List<PopularTempleDTO> getPopularTemples();
 
 }

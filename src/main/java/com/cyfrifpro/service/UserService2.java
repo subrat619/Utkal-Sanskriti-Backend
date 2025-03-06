@@ -18,5 +18,7 @@ public interface UserService2 {
 
 	List<User> getMidLevelUsersByTopLevelId(Long topLevelId);
 
+	List<User> getTeamLeadersByMidLevelId(Long midLevelId);
+	
 	List<UserDTO> getUsersByStatus(String status);
 }

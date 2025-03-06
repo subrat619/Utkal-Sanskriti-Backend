@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.service.TempleDetailsService;
 
@@ -100,6 +101,18 @@ public class TempleDetailsController {
 		List<String> districtNames = Arrays.asList(districts.split(","));
 		List<TempleDetailsDTO> temples = templeDetailsService.getTempleDetailsByDistrictNames(districtNames);
 		return ResponseEntity.ok(temples);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<TempleDetailsDTO>> searchTemplesByName(@RequestParam("name") String name) {
+		List<TempleDetailsDTO> dtos = templeDetailsService.searchTemplesByName(name);
+		return ResponseEntity.ok(dtos);
+	}
+
+	@GetMapping("/popular")
+	public ResponseEntity<List<PopularTempleDTO>> getPopularTemples() {
+		List<PopularTempleDTO> popularTemples = templeDetailsService.getPopularTemples();
+		return ResponseEntity.ok(popularTemples);
 	}
 
 }

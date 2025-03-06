@@ -68,6 +68,12 @@ public class UserController {
 		return ResponseEntity.ok(midLevelUsers);
 	}
 
+	@GetMapping("/teamleader/{midLevelId}")
+	public ResponseEntity<List<User>> getTeamLeadersByMidLevelId(@PathVariable Long midLevelId) {
+		List<User> teamLeaders = userService2.getTeamLeadersByMidLevelId(midLevelId);
+		return ResponseEntity.ok(teamLeaders);
+	}
+
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<UserDTO>> getUsersByStatus(@PathVariable String status) {
 		List<UserDTO> users = userService2.getUsersByStatus(status);

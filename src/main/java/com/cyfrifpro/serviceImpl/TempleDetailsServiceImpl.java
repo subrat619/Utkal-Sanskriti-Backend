@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.Exception.ResourceNotFoundException;
 import com.cyfrifpro.model.District;
@@ -155,6 +156,23 @@ public class TempleDetailsServiceImpl implements TempleDetailsService {
 			dto.setDistrictName(t.getDistrict().getName());
 			return dto;
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<TempleDetailsDTO> searchTemplesByName(String name) {
+		logger.info("Searching temples by name: {}", name);
+		List<TempleDetails> temples = templeDetailsRepository.findByNameContainingIgnoreCase(name);
+		return temples.stream().map(t -> {
+			TempleDetailsDTO dto = modelMapper.map(t, TempleDetailsDTO.class);
+			dto.setDistrictName(t.getDistrict().getName());
+			return dto;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PopularTempleDTO> getPopularTemples() {
+		logger.info("Fetching popular temples");
+		return templeDetailsRepository.findPopularTemples();
 	}
 
 }

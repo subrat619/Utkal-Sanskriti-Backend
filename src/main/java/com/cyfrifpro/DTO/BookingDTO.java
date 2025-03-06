@@ -6,7 +6,6 @@ import java.util.List;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ public class BookingDTO {
 
 	private Long bookingId;
 
-	@NotNull(message = "Booking date is required")
+//	@NotNull(message = "Booking date is required")
 	private LocalDateTime bookingDate;
 
 	private UserDTO client;
