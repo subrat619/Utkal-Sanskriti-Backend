@@ -73,6 +73,18 @@ public class UserController {
 		List<User> teamLeaders = userService2.getTeamLeadersByMidLevelId(midLevelId);
 		return ResponseEntity.ok(teamLeaders);
 	}
+	
+	@GetMapping("/support/{teamleaderId}")
+	public ResponseEntity<List<User>> getSupportServiceByTeamLeaderId(@PathVariable Long teamleaderId) {
+		List<User> teamLeaders = userService2.getSupportServiceByTeamLeaderId(teamleaderId);
+		return ResponseEntity.ok(teamLeaders);
+	}
+	
+	@GetMapping("/templeAdmin/{teamleaderId}")
+	public ResponseEntity<List<User>> getTempleAdminByTeamLeaderId(@PathVariable Long teamleaderId) {
+		List<User> teamLeaders = userService2.getTempleAdminByTeamLeaderId(teamleaderId);
+		return ResponseEntity.ok(teamLeaders);
+	}
 
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<UserDTO>> getUsersByStatus(@PathVariable String status) {

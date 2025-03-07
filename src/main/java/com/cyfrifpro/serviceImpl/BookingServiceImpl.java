@@ -457,4 +457,25 @@ public class BookingServiceImpl implements BookingService {
 		return modelMapper.map(updatedBooking, BookingDTO.class);
 	}
 
+	@Override
+	public UserDTO getAssignedTempleAdminByBookingId(Long bookingId) {
+		// Fetch the booking by its ID
+		Booking booking = bookingRepository.findById(bookingId)
+				.orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingId", bookingId));
+
+		// Check if there are booking items available
+		if (booking.getBookingItems() == null || booking.getBookingItems().isEmpty()) {
+			throw new ResourceNotFoundException("BookingItems", "bookingId", bookingId);
+		}
+
+		// Get the temple from the first booking item
+		TempleDetails temple = booking.getBookingItems().get(0).getTemple();
+		if (temple == null || temple.getTempleAdmin() == null) {
+			throw new ResourceNotFoundException("TempleAdmin", "bookingId", bookingId);
+		}
+
+		// Map and return the temple admin details
+		return modelMapper.map(temple.getTempleAdmin(), UserDTO.class);
+	}
+
 }

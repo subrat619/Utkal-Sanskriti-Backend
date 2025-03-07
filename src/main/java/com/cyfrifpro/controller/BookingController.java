@@ -204,6 +204,13 @@ public class BookingController {
 		return ResponseEntity.ok(associations);
 	}
 
+	// Fetch Temple Admin By booking id
+	@GetMapping("/{bookingId}/temple_admin")
+	public ResponseEntity<UserDTO> getAssignedTempleAdmin(@PathVariable Long bookingId) {
+		UserDTO templeAdmin = bookingService.getAssignedTempleAdminByBookingId(bookingId);
+		return ResponseEntity.ok(templeAdmin);
+	}
+
 	@PutMapping("/complete/{bookingId}")
 	public ResponseEntity<BookingDTO> completeBooking(@PathVariable Long bookingId, @RequestParam Long guideId) {
 		BookingDTO updatedBooking = bookingService.completeBooking(bookingId, guideId);

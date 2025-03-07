@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
+import com.cyfrifpro.model.User;
 
 public interface TempleDetailsService {
 	TempleDetailsDTO createTempleDetails(TempleDetailsDTO dto);
@@ -28,5 +29,7 @@ public interface TempleDetailsService {
 	List<TempleDetailsDTO> searchTemplesByName(String name);
 
 	List<PopularTempleDTO> getPopularTemples();
+
+	TempleDetailsDTO createTempleDetailsWithTempleAdmin(TempleDetailsDTO dto, User templeAdmin);
 
 }

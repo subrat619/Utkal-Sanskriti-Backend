@@ -19,6 +19,7 @@ import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.Exception.ResourceNotFoundException;
 import com.cyfrifpro.model.District;
 import com.cyfrifpro.model.TempleDetails;
+import com.cyfrifpro.model.User;
 import com.cyfrifpro.repository.DistrictRepository;
 import com.cyfrifpro.repository.TempleDetailsRepository;
 import com.cyfrifpro.service.TempleDetailsService;
@@ -173,6 +174,27 @@ public class TempleDetailsServiceImpl implements TempleDetailsService {
 	public List<PopularTempleDTO> getPopularTemples() {
 		logger.info("Fetching popular temples");
 		return templeDetailsRepository.findPopularTemples();
+	}
+
+	@Override
+	public TempleDetailsDTO createTempleDetailsWithTempleAdmin(TempleDetailsDTO dto, User templeAdmin) {
+		logger.info("Creating temple details for temple admin: {}", templeAdmin.getUserId());
+		TempleDetails temple = modelMapper.map(dto, TempleDetails.class);
+
+		// Automatically create the district if it doesn't exist.
+		District district = districtRepository.findByName(dto.getDistrictName()).orElseGet(() -> {
+			District newDistrict = new District();
+			newDistrict.setName(dto.getDistrictName());
+			logger.info("District not found, creating new district: {}", dto.getDistrictName());
+			return districtRepository.save(newDistrict);
+		});
+		temple.setDistrict(district);
+
+		// Set the temple admin for the temple.
+		temple.setTempleAdmin(templeAdmin);
+
+		TempleDetails saved = templeDetailsRepository.save(temple);
+		return modelMapper.map(saved, TempleDetailsDTO.class);
 	}
 
 }

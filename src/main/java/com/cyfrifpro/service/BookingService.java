@@ -69,4 +69,6 @@ public interface BookingService {
 	// Method for completing a booking by the assigned guide
 	BookingDTO completeBooking(Long bookingId, Long guideId);
 
+	UserDTO getAssignedTempleAdminByBookingId(Long bookingId);
+
 }

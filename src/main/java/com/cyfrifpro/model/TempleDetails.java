@@ -52,6 +52,10 @@ public class TempleDetails {
 	@Column(name = "image_data", columnDefinition = "LONGBLOB")
 	private byte[] imageData;
 
+	@ManyToOne(fetch = FetchType.LAZY)//
+    @JoinColumn(name = "temple_admin_id")//
+    private User templeAdmin;//
+	
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 

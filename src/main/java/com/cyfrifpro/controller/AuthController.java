@@ -25,6 +25,7 @@ import com.cyfrifpro.DTO.ForgotPasswordRequest;
 import com.cyfrifpro.DTO.LoginCredentials;
 import com.cyfrifpro.DTO.ResetPasswordRequest;
 import com.cyfrifpro.DTO.ResetPasswordWithOldPasswordRequest;
+import com.cyfrifpro.DTO.TempleAdminMappingRequest;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.config.JWTUtil;
 import com.cyfrifpro.model.User;
@@ -38,7 +39,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -189,4 +190,12 @@ public class AuthController {
 					.body(Collections.singletonMap("error", "An unexpected error occurred"));
 		}
 	}
+
+	@PostMapping("/register_temple_admin_with_temple")
+	public ResponseEntity<Map<String, Object>> registerTempleAdminMapping(
+			@Valid @RequestBody TempleAdminMappingRequest request) {
+		Map<String, Object> result = userService.registerTempleAdminMapping(request);
+		return new ResponseEntity<>(result, HttpStatus.CREATED);
+	}
+
 }

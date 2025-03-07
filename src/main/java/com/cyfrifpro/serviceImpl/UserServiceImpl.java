@@ -106,6 +106,16 @@ public class UserServiceImpl implements UserService2 {
 		return userRepo.findByCreatedBy_UserIdAndRole(midLevelId, Role.TEAM_LEADER);
 	}
 
+	@Override
+	public List<User> getSupportServiceByTeamLeaderId(Long teamLeaderId) {
+		return userRepo.findByCreatedBy_UserIdAndRole(teamLeaderId, Role.SUPPORT_SERVICE);
+	}
+
+	@Override
+	public List<User> getTempleAdminByTeamLeaderId(Long teamLeaderId) {
+		return userRepo.findByCreatedBy_UserIdAndRole(teamLeaderId, Role.TEMPLE_ADMIN);
+	}
+
 	public List<UserDTO> getUsersByStatus(String status) {
 		logger.info("Fetching users with status: {}", status);
 		List<User> users = userRepo.findByStatus(status);

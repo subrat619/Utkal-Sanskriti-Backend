@@ -1,6 +1,8 @@
 package com.cyfrifpro.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -10,10 +12,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cyfrifpro.DTO.TempleAdminMappingRequest;
+import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.Exception.ResourceNotFoundException;
 import com.cyfrifpro.model.Role;
+import com.cyfrifpro.model.TempleDetails;
 import com.cyfrifpro.model.User;
+import com.cyfrifpro.repository.TempleDetailsRepository;
 import com.cyfrifpro.repository.UserRepository;
 import com.cyfrifpro.util.RoleHierarchy;
 
@@ -33,6 +39,9 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private TempleDetailsRepository templeDetailsRepository;
 
 	public UserDTO registerUser(UserDTO userDTO, Long creatorUserId) {
 		try {
@@ -81,5 +90,42 @@ public class UserService {
 
 	public List<User> getChildUsersByCreatorId(Long creatorId) {
 		return userRepo.findByCreatedBy_UserId(creatorId);
+	}
+
+	public Map<String, Object> registerTempleAdminMapping(TempleAdminMappingRequest request) {
+		// Fetch the government user (creator) and verify role
+		User government = userRepo.findById(request.getGovernmentId())
+				.orElseThrow(() -> new ResourceNotFoundException("User", "governmentId", request.getGovernmentId()));
+		if (!government.getRole().equals(Role.GOVERMENT)) {
+			throw new IllegalArgumentException("Only users with GOVERMENT role can map a temple admin to a temple.");
+		}
+
+		// Prepare the temple admin data by enforcing the TEMPLE_ADMIN role
+		UserDTO templeAdminDTO = request.getTempleAdminDTO();
+		templeAdminDTO.setRole(Role.TEMPLE_ADMIN);
+
+		// Register the temple admin (using existing registration method)
+		UserDTO registeredTempleAdmin = registerUser(templeAdminDTO, request.getGovernmentId());
+
+		// Retrieve the actual temple admin entity
+		User templeAdminUser = userRepo.findById(registeredTempleAdmin.getUserId()).orElseThrow(
+				() -> new ResourceNotFoundException("User", "templeAdminId", registeredTempleAdmin.getUserId()));
+
+		// Fetch the existing temple by its ID
+		TempleDetails temple = templeDetailsRepository.findById(request.getTempleId())
+				.orElseThrow(() -> new ResourceNotFoundException("TempleDetails", "templeId", request.getTempleId()));
+
+		// Associate the temple admin with the temple
+		temple.setTempleAdmin(templeAdminUser);
+		templeDetailsRepository.save(temple);
+
+		// Prepare a response map containing both the temple admin and the updated
+		// temple details
+		Map<String, Object> response = new HashMap<>();
+		response.put("templeAdmin", registeredTempleAdmin);
+		// Assuming you have a mapping from TempleDetails to TempleDetailsDTO
+		response.put("templeDetails", modelMapper.map(temple, TempleDetailsDTO.class));
+
+		return response;
 	}
 }
