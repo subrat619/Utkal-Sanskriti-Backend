@@ -130,19 +130,19 @@ public class EmergencyService {
 	                  "\nPlease take immediate action.";
 
 	    // Notify support and team leader via default method
-//	    emailService.notifyMasterAdmin(subject, body);
+	    emailService.notifyMasterAdmin(subject, body);
 
 	    // Conditionally send email to the associated guide if available and if flag is true
-	    if (alertDTO.isSendEmailToGuide() && associatedGuide != null && associatedGuide.getEmail() != null) {
-	        emailService.sendEmail(associatedGuide.getEmail(), subject, body);
-	        logger.info("Emergency email sent to associated guide: {}", associatedGuide.getEmail());
-	    }
+//	    if (alertDTO.isSendEmailToGuide() && associatedGuide != null && associatedGuide.getEmail() != null) {
+//	        emailService.sendEmail(associatedGuide.getEmail(), subject, body);
+//	        logger.info("Emergency email sent to associated guide: {}", associatedGuide.getEmail());
+//	    }
 
 	    // Send email to temple admin if available
-	    if (associatedTempleAdmin != null && associatedTempleAdmin.getEmail() != null) {
-	        emailService.sendEmail(associatedTempleAdmin.getEmail(), subject, body);
-	        logger.info("Emergency email sent to temple admin: {}", associatedTempleAdmin.getEmail());
-	    }
+//	    if (associatedTempleAdmin != null && associatedTempleAdmin.getEmail() != null) {
+//	        emailService.sendEmail(associatedTempleAdmin.getEmail(), subject, body);
+//	        logger.info("Emergency email sent to temple admin: {}", associatedTempleAdmin.getEmail());
+//	    }
 
 	    // Send email to team leader if available
 //	    if (updatingTeamLeader != null && updatingTeamLeader.getEmail() != null) {

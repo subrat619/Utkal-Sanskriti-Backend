@@ -71,4 +71,8 @@ public interface BookingService {
 
 	UserDTO getAssignedTempleAdminByBookingId(Long bookingId);
 
+	BookingDTO confirmBookingByTopLevel(Long bookingId, Long topLevelId);
+
+	List<BookingDTO> getBookingsBySupportServiceId(Long supportServiceId);
+
 }

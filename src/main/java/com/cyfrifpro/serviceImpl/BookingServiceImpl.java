@@ -478,4 +478,38 @@ public class BookingServiceImpl implements BookingService {
 		return modelMapper.map(temple.getTempleAdmin(), UserDTO.class);
 	}
 
+	@Override
+	public BookingDTO confirmBookingByTopLevel(Long bookingId, Long topLevelId) {
+		// Fetch the booking by its ID
+		Booking booking = bookingRepository.findById(bookingId)
+				.orElseThrow(() -> new ResourceNotFoundException("Booking", "bookingId", bookingId));
+
+		// Verify that the current status is ASSIGNED_BY_TEMPLE_ADMIN
+		if (!BookingStatus.ASSIGNED_BY_TEMPLE_ADMIN.equals(booking.getStatus())) {
+			throw new IllegalStateException(
+					"Booking cannot be confirmed unless its status is ASSIGNED_BY_TEMPLE_ADMIN.");
+		}
+
+		// Retrieve the top-level user and set it to the booking (if needed)
+		User topLevel = userRepository.findById(topLevelId)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "topLevelId", topLevelId));
+		booking.setTopLevel(topLevel);
+
+		// Update the booking status to CONFIRM
+		booking.setStatus(BookingStatus.CONFIRM);
+
+		// Save the updated booking
+		Booking updatedBooking = bookingRepository.save(booking);
+
+		logger.info("Booking {} confirmed by top level user {}", updatedBooking.getBookingId(), topLevelId);
+		return modelMapper.map(updatedBooking, BookingDTO.class);
+	}
+
+	@Override
+	public List<BookingDTO> getBookingsBySupportServiceId(Long supportServiceId) {
+		List<Booking> bookings = bookingRepository.findBySupportService_UserId(supportServiceId);
+		return bookings.stream().map(booking -> modelMapper.map(booking, BookingDTO.class))
+				.collect(Collectors.toList());
+	}
+
 }

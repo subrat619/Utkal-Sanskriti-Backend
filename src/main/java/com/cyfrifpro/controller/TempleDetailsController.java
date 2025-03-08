@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/temple_details")
 @Validated
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://127.0.0.1:5500/")
 public class TempleDetailsController {
 
 	private final TempleDetailsService templeDetailsService;
@@ -89,7 +89,7 @@ public class TempleDetailsController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/by-district/{districtName}")
+	@GetMapping("/by_district/{districtName}")
 	public ResponseEntity<List<TempleDetailsDTO>> getTemplesByDistrict(@PathVariable String districtName) {
 		List<TempleDetailsDTO> temples = templeDetailsService.getTemplesByDistrict(districtName);
 		return ResponseEntity.ok(temples);

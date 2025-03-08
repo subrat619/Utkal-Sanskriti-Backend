@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cyfrifpro.DTO.UserContactDTO;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.DTO.UserProfileUpdateDTO;
+import com.cyfrifpro.DTO.UserSummaryDTO;
 import com.cyfrifpro.model.User;
 import com.cyfrifpro.service.UserService;
 import com.cyfrifpro.service.UserService2;
@@ -73,13 +75,13 @@ public class UserController {
 		List<User> teamLeaders = userService2.getTeamLeadersByMidLevelId(midLevelId);
 		return ResponseEntity.ok(teamLeaders);
 	}
-	
+
 	@GetMapping("/support/{teamleaderId}")
 	public ResponseEntity<List<User>> getSupportServiceByTeamLeaderId(@PathVariable Long teamleaderId) {
 		List<User> teamLeaders = userService2.getSupportServiceByTeamLeaderId(teamleaderId);
 		return ResponseEntity.ok(teamLeaders);
 	}
-	
+
 	@GetMapping("/templeAdmin/{teamleaderId}")
 	public ResponseEntity<List<User>> getTempleAdminByTeamLeaderId(@PathVariable Long teamleaderId) {
 		List<User> teamLeaders = userService2.getTempleAdminByTeamLeaderId(teamleaderId);
@@ -90,5 +92,17 @@ public class UserController {
 	public ResponseEntity<List<UserDTO>> getUsersByStatus(@PathVariable String status) {
 		List<UserDTO> users = userService2.getUsersByStatus(status);
 		return ResponseEntity.ok(users);
+	}
+
+	@GetMapping("/contacts")
+	public ResponseEntity<List<UserContactDTO>> getUserContacts() {
+		List<UserContactDTO> contacts = userService2.getUserContacts();
+		return ResponseEntity.ok(contacts);
+	}
+
+	@GetMapping("/summary/{userId}")
+	public ResponseEntity<UserSummaryDTO> getUserSummary(@PathVariable Long userId) {
+		UserSummaryDTO summary = userService2.getUserSummaryById(userId);
+		return ResponseEntity.ok(summary);
 	}
 }

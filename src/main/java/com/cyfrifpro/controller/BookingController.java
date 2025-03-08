@@ -211,9 +211,23 @@ public class BookingController {
 		return ResponseEntity.ok(templeAdmin);
 	}
 
+	@PutMapping("/confirm/{bookingId}")
+	public ResponseEntity<BookingDTO> confirmBookingByTopLevel(@PathVariable Long bookingId,
+			@RequestParam Long topLevelId) {
+		BookingDTO updatedBooking = bookingService.confirmBookingByTopLevel(bookingId, topLevelId);
+		return ResponseEntity.ok(updatedBooking);
+	}
+
 	@PutMapping("/complete/{bookingId}")
 	public ResponseEntity<BookingDTO> completeBooking(@PathVariable Long bookingId, @RequestParam Long guideId) {
 		BookingDTO updatedBooking = bookingService.completeBooking(bookingId, guideId);
 		return ResponseEntity.ok(updatedBooking);
+	}
+
+	// End point by which support service get bookings which he got assigned.....
+	@GetMapping("/supportService/{supportServiceId}")
+	public ResponseEntity<List<BookingDTO>> getBookingsBySupportServiceId(@PathVariable Long supportServiceId) {
+		List<BookingDTO> bookings = bookingService.getBookingsBySupportServiceId(supportServiceId);
+		return ResponseEntity.ok(bookings);
 	}
 }

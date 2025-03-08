@@ -11,8 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cyfrifpro.DTO.ChangePasswordRequest;
+import com.cyfrifpro.DTO.UserContactDTO;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.DTO.UserProfileUpdateDTO;
+import com.cyfrifpro.DTO.UserSummaryDTO;
 import com.cyfrifpro.Exception.ResourceNotFoundException;
 import com.cyfrifpro.model.Role;
 import com.cyfrifpro.model.User;
@@ -121,4 +123,20 @@ public class UserServiceImpl implements UserService2 {
 		List<User> users = userRepo.findByStatus(status);
 		return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
 	}
+
+	public List<UserContactDTO> getUserContacts() {
+		List<User> users = userRepo.findAll();
+		return users.stream().map(user -> {
+			String fullName = user.getFirstName() + " " + user.getLastName();
+			return new UserContactDTO(fullName, user.getEmail(), user.getContactNumber());
+		}).collect(Collectors.toList());
+	}
+
+	public UserSummaryDTO getUserSummaryById(Long userId) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
+		String fullName = user.getFirstName() + " " + user.getLastName();
+		return new UserSummaryDTO(fullName, user.getEmail(), user.getContactNumber());
+	}
+
 }
