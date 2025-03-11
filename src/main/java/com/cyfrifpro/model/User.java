@@ -77,10 +77,13 @@ public class User {
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = LocalDateTime.now();
-
-		// Set default status if not provided
 		if (this.status == null) {
-			this.status = "NOT_SCHEDULED";
+			if (this.role != null && this.role.equals(Role.CLIENT)) {
+				this.status = "NOT_SCHEDULED";
+			} else {
+				// For other roles, set an alternative default status
+				this.status = "ACTIVE";
+			}
 		}
 	}
 

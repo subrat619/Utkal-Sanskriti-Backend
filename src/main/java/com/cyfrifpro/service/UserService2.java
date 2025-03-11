@@ -26,6 +26,8 @@ public interface UserService2 {
 
 	List<User> getTempleAdminByTeamLeaderId(Long teamLeaderId);
 
+	List<User> getGuidesByTempleAdminId(Long templeAdminId);
+	
 	List<UserDTO> getUsersByStatus(String status);
 
 //	Map<String, Object> registerTempleAdminWithTemple(TempleAdminRegistrationRequest request);

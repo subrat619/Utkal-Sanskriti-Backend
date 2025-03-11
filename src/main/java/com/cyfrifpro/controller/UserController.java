@@ -87,6 +87,12 @@ public class UserController {
 		List<User> teamLeaders = userService2.getTempleAdminByTeamLeaderId(teamleaderId);
 		return ResponseEntity.ok(teamLeaders);
 	}
+	
+	@GetMapping("/guide/{templeAdminId}")
+	public ResponseEntity<List<User>> getGuidesByTempleAdminId(@PathVariable Long templeAdminId) {
+		List<User> guids = userService2.getGuidesByTempleAdminId(templeAdminId);
+		return ResponseEntity.ok(guids);
+	}
 
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<UserDTO>> getUsersByStatus(@PathVariable String status) {
