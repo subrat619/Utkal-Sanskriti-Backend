@@ -75,4 +75,10 @@ public interface BookingService {
 
 	List<BookingDTO> getBookingsBySupportServiceId(Long supportServiceId);
 
+	List<UserDTO> getAssignedGuideDetailsByClientId(Long clientId);
+
+	List<UserDTO> getAssignedTempleAdminDetailsByClientId(Long clientId);
+
+	List<UserDTO> getAssignedSupportServiceDetailsByClientId(Long clientId);
+
 }

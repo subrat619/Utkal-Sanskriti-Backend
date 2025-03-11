@@ -512,4 +512,32 @@ public class BookingServiceImpl implements BookingService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<UserDTO> getAssignedGuideDetailsByClientId(Long clientId) {
+		// Fetch all bookings for the given client ID
+		List<Booking> bookings = bookingRepository.findByClient_UserId(clientId);
+		// Use a stream to extract assigned guide details (if present)
+		return bookings.stream().filter(booking -> booking.getAssignedGuide() != null)
+				.map(booking -> modelMapper.map(booking.getAssignedGuide(), UserDTO.class))
+				// Using distinct() here; ensure UserDTO implements equals() and hashCode()
+				// appropriately
+				.distinct().collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserDTO> getAssignedTempleAdminDetailsByClientId(Long clientId) {
+		List<Booking> bookings = bookingRepository.findByClient_UserId(clientId);
+		return bookings.stream().filter(booking -> booking.getTempleAdmin() != null)
+				.map(booking -> modelMapper.map(booking.getTempleAdmin(), UserDTO.class)).distinct()
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserDTO> getAssignedSupportServiceDetailsByClientId(Long clientId) {
+		List<Booking> bookings = bookingRepository.findByClient_UserId(clientId);
+		return bookings.stream().filter(booking -> booking.getSupportService() != null)
+				.map(booking -> modelMapper.map(booking.getSupportService(), UserDTO.class)).distinct()
+				.collect(Collectors.toList());
+	}
+
 }

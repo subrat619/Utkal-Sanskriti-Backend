@@ -230,4 +230,25 @@ public class BookingController {
 		List<BookingDTO> bookings = bookingService.getBookingsBySupportServiceId(supportServiceId);
 		return ResponseEntity.ok(bookings);
 	}
+
+	// Endpoint to fetch assigned guide details by client ID
+	@GetMapping("/by_client/{clientId}/assigned_guide")
+	public ResponseEntity<List<UserDTO>> getAssignedGuideDetailsByClientId(@PathVariable Long clientId) {
+		List<UserDTO> guideDetails = bookingService.getAssignedGuideDetailsByClientId(clientId);
+		return ResponseEntity.ok(guideDetails);
+	}
+
+	// Endpoint to fetch assigned temple admin details by client ID
+	@GetMapping("/by_client/{clientId}/temple_admin")
+	public ResponseEntity<List<UserDTO>> getAssignedTempleAdminDetailsByClientId(@PathVariable Long clientId) {
+		List<UserDTO> templeAdminDetails = bookingService.getAssignedTempleAdminDetailsByClientId(clientId);
+		return ResponseEntity.ok(templeAdminDetails);
+	}
+
+	// Endpoint to fetch assigned support service details by client ID
+	@GetMapping("/by_client/{clientId}/support_service")
+	public ResponseEntity<List<UserDTO>> getAssignedSupportServiceDetailsByClientId(@PathVariable Long clientId) {
+		List<UserDTO> supportServiceDetails = bookingService.getAssignedSupportServiceDetailsByClientId(clientId);
+		return ResponseEntity.ok(supportServiceDetails);
+	}
 }
