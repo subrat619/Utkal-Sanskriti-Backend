@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://127.0.0.1:5500/")
 public class EventController {
 
 	private final EventService eventService;
@@ -72,7 +72,7 @@ public class EventController {
 	}
 
 	// Endpoint for creating an event with image using multipart/form-data
-	@PreAuthorize("hasRole('TOP_LEVEL')")
+//	@PreAuthorize("hasRole('TOP_LEVEL')")
 	@PostMapping(value = "/add-with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<EventDTO> createEventWithImage(@RequestParam("eventName") String eventName,
 			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,

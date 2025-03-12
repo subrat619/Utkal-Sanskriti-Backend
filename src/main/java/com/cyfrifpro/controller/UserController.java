@@ -1,6 +1,7 @@
 package com.cyfrifpro.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cyfrifpro.DTO.UserContactDTO;
 import com.cyfrifpro.DTO.UserDTO;
+import com.cyfrifpro.DTO.UserHierarchyCountDTO;
 import com.cyfrifpro.DTO.UserProfileUpdateDTO;
 import com.cyfrifpro.DTO.UserSummaryDTO;
+import com.cyfrifpro.model.Role;
 import com.cyfrifpro.model.User;
 import com.cyfrifpro.service.UserService;
 import com.cyfrifpro.service.UserService2;
@@ -87,7 +91,7 @@ public class UserController {
 		List<User> teamLeaders = userService2.getTempleAdminByTeamLeaderId(teamleaderId);
 		return ResponseEntity.ok(teamLeaders);
 	}
-	
+
 	@GetMapping("/guide/{templeAdminId}")
 	public ResponseEntity<List<User>> getGuidesByTempleAdminId(@PathVariable Long templeAdminId) {
 		List<User> guids = userService2.getGuidesByTempleAdminId(templeAdminId);
@@ -111,4 +115,41 @@ public class UserController {
 		UserSummaryDTO summary = userService2.getUserSummaryById(userId);
 		return ResponseEntity.ok(summary);
 	}
+
+	@GetMapping("/counts_by_role")
+	public ResponseEntity<Map<Role, Long>> getCountsByRole() {
+		Map<Role, Long> counts = userService2.countUsersByRole();
+		return ResponseEntity.ok(counts);
+	}
+
+	// Endpoint for direct children count
+	@GetMapping("/created_by/{creatorId}/direct_counts")
+	public ResponseEntity<Map<Role, Long>> getDirectChildrenCounts(@PathVariable Long creatorId) {
+		Map<Role, Long> counts = userService2.countDirectChildrenByCreatorId(creatorId);
+		return ResponseEntity.ok(counts);
+	}
+
+	// Endpoint for full hierarchical count
+	@GetMapping("/created_by/{creatorId}/hierarchy")
+	public ResponseEntity<UserHierarchyCountDTO> getUserHierarchy(@PathVariable Long creatorId) {
+		UserHierarchyCountDTO hierarchy = userService2.getUserHierarchy(creatorId);
+		return ResponseEntity.ok(hierarchy);
+	}
+
+	// Endpoint to fetch overall count of users created by a given creator
+	@GetMapping("/created_by/{creatorId}/overall_counts")
+	public ResponseEntity<Map<Role, Long>> getOverallDescendantCounts(@PathVariable Long creatorId) {
+		Map<Role, Long> counts = userService2.countOverallDescendantsByCreatorId(creatorId);
+		return ResponseEntity.ok(counts);
+	}
+
+	// Endpoint to fetch all descendant users of a creator, filtered by role.
+	// For example: /api/users/created-by/5/descendants?role=MID_LEVEL
+	@GetMapping("/created_by/{creatorId}/descendants")
+	public ResponseEntity<List<UserDTO>> getDescendantsByRole(@PathVariable Long creatorId, @RequestParam String role) {
+		Role filterRole = Role.valueOf(role.toUpperCase());
+		List<UserDTO> descendantUsers = userService2.getDescendantsByRole(creatorId, filterRole);
+		return ResponseEntity.ok(descendantUsers);
+	}
+
 }
