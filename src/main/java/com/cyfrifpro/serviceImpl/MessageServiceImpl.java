@@ -22,54 +22,52 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class MessageServiceImpl implements MessageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
-    private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+	private final MessageRepository messageRepository;
+	private final UserRepository userRepository;
+	private final ModelMapper modelMapper;
 
-    public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.messageRepository = messageRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
+	public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository,
+			ModelMapper modelMapper) {
+		this.messageRepository = messageRepository;
+		this.userRepository = userRepository;
+		this.modelMapper = modelMapper;
+	}
 
-    @Override
-    public MessageDTO sendMessage(MessageDTO messageDTO) {
-        // Validate that sender and recipient exist
-        User sender = userRepository.findById(messageDTO.getSenderId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "senderId", messageDTO.getSenderId()));
-        User recipient = userRepository.findById(messageDTO.getRecipientId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "recipientId", messageDTO.getRecipientId()));
+	@Override
+	public MessageDTO sendMessage(MessageDTO messageDTO) {
+		// Validate sender and recipient exist
+		User sender = userRepository.findById(messageDTO.getSenderId())
+				.orElseThrow(() -> new ResourceNotFoundException("User", "senderId", messageDTO.getSenderId()));
+		User recipient = userRepository.findById(messageDTO.getRecipientId())
+				.orElseThrow(() -> new ResourceNotFoundException("User", "recipientId", messageDTO.getRecipientId()));
 
-        Message message = new Message();
-        message.setSender(sender);
-        message.setRecipient(recipient);
-        message.setContent(messageDTO.getContent());
-        // timestamp is set via @PrePersist
+		Message message = new Message();
+		message.setSender(sender);
+		message.setRecipient(recipient);
+		message.setContent(messageDTO.getContent());
+		// timestamp set automatically via @PrePersist
 
-        Message savedMessage = messageRepository.save(message);
-        logger.info("Message sent from {} to {} with id: {}", sender.getUserId(), recipient.getUserId(), savedMessage.getMessageId());
-        return modelMapper.map(savedMessage, MessageDTO.class);
-    }
+		Message savedMessage = messageRepository.save(message);
+		logger.info("Message {} sent from {} to {}", savedMessage.getMessageId(), sender.getUserId(),
+				recipient.getUserId());
+		return modelMapper.map(savedMessage, MessageDTO.class);
+	}
 
-    @Override
-    public List<MessageDTO> getMessagesBetweenUsers(Long userId1, Long userId2) {
-        List<Message> messages = messageRepository.findBySender_UserIdAndRecipient_UserId(userId1, userId2);
-        // Optionally, merge with messages in reverse order if needed:
-        messages.addAll(messageRepository.findBySender_UserIdAndRecipient_UserId(userId2, userId1));
-        return messages.stream()
-                .sorted((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
-                .map(message -> modelMapper.map(message, MessageDTO.class))
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<MessageDTO> getMessagesBetweenUsers(Long userId1, Long userId2) {
+		List<Message> messages1 = messageRepository.findBySender_UserIdAndRecipient_UserId(userId1, userId2);
+		List<Message> messages2 = messageRepository.findBySender_UserIdAndRecipient_UserId(userId2, userId1);
+		messages1.addAll(messages2);
+		return messages1.stream().sorted((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
+				.map(message -> modelMapper.map(message, MessageDTO.class)).collect(Collectors.toList());
+	}
 
-    @Override
-    public List<MessageDTO> getMessagesForUser(Long userId) {
-        List<Message> messages = messageRepository.findBySender_UserIdOrRecipient_UserId(userId, userId);
-        return messages.stream()
-                .sorted((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
-                .map(message -> modelMapper.map(message, MessageDTO.class))
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<MessageDTO> getMessagesForUser(Long userId) {
+		List<Message> messages = messageRepository.findBySender_UserIdOrRecipient_UserId(userId, userId);
+		return messages.stream().sorted((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
+				.map(message -> modelMapper.map(message, MessageDTO.class)).collect(Collectors.toList());
+	}
 }
