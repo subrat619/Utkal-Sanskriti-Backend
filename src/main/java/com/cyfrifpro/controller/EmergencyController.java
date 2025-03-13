@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cyfrifpro.DTO.EmergencyAlertDTO;
 import com.cyfrifpro.service.EmergencyService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -31,6 +32,7 @@ public class EmergencyController {
 	}
 
 	// Endpoint for clients to trigger an emergency alert
+	@Operation(summary = "Method for send emergency support message if any emergency comes")
 	@PostMapping("/alert")
 	public ResponseEntity<String> triggerEmergency(@Valid @RequestBody EmergencyAlertDTO alertDTO,
 			@RequestParam Long clientId) {

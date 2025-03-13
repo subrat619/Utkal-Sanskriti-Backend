@@ -87,6 +87,7 @@ public class BookingController {
 
 	// Endpoint for mid level who assign the team leader
 //		@PreAuthorize("hasRole('TOP_LEVEL')")
+	@Operation(summary = "Assigning TEAM_LEADER by MID_LEVEL")
 	@PutMapping("/assign_by_mid_level/{bookingId}")
 	public ResponseEntity<BookingDTO> updateBookingByMidLevel(@PathVariable Long bookingId,
 			@Valid @RequestBody BookingDTO bookingDTO, @RequestParam Long midLevelId) {
@@ -96,6 +97,7 @@ public class BookingController {
 
 	// Endpoint for team leader who assign the support service and temple admin
 //	@PreAuthorize("hasRole('TOP_LEVEL')")
+	@Operation(summary = "Assigning SUPPORT_SERVICE by TEAM_LEADER")
 	@PutMapping("/assign_by_team_leader/{bookingId}")
 	public ResponseEntity<BookingDTO> updateBookingDetailsByTeamLeader(@PathVariable Long bookingId,
 			@Valid @RequestBody BookingDTO bookingDTO, @RequestParam Long teamLeaderId) {
@@ -105,6 +107,7 @@ public class BookingController {
 
 	// Endpoint for temple admin who assign the guide
 //	@PreAuthorize("hasRole('TEMPLE_ADMIN')")
+	@Operation(summary = "Assigning GUIDE by TEMPLE_ADMIN")
 	@PutMapping("/assign_guide/{bookingId}")
 	public ResponseEntity<BookingDTO> assignGuideToBooking(@PathVariable Long bookingId, @RequestParam Long guideId,
 			@RequestParam Long templeAdminId) {
@@ -113,12 +116,14 @@ public class BookingController {
 	}
 
 	@GetMapping("/{bookingId}/assigned_guide")
+	@Operation(summary = "Get assigned GUIDE details by booking id")
 	public ResponseEntity<UserDTO> getAssignedGuideDetails(@PathVariable Long bookingId) {
 		UserDTO guideDetails = bookingService.getAssignedGuideDetails(bookingId);
 		return ResponseEntity.ok(guideDetails);
 	}
 
 	@GetMapping("/{bookingId}/assigned_support_service")
+	@Operation(summary = "Get assigned SUPPORT_SERVICE details by booking id")
 	public ResponseEntity<UserDTO> getAssignedSupportServiceDetails(@PathVariable Long bookingId) {
 		UserDTO supportServiceDetails = bookingService.getAssignedSupportServiceDetails(bookingId);
 		return ResponseEntity.ok(supportServiceDetails);
@@ -126,6 +131,7 @@ public class BookingController {
 
 	// New endpoint to fetch team leader details
 	@GetMapping("/{bookingId}/team_leader")
+	@Operation(summary = "Get assigned TEAM_LEADER details by booking id")
 	public ResponseEntity<UserDTO> getTeamLeaderDetails(@PathVariable Long bookingId) {
 		UserDTO teamLeaderDetails = bookingService.getTeamLeaderDetails(bookingId);
 		return ResponseEntity.ok(teamLeaderDetails);
@@ -134,12 +140,14 @@ public class BookingController {
 	// End point for finding bookings whose status new (This End point specially for
 	// top level)
 	@GetMapping("/status/new")
+	@Operation(summary = "Get bookings whose status NEW")
 	public ResponseEntity<List<BookingDTO>> getNewBookings() {
 		List<BookingDTO> bookings = bookingService.getNewBookings();
 		return ResponseEntity.ok(bookings);
 	}
 
 	// End point for finding bookings whose status update_by_top_level
+	@Operation(summary = "Get bookings whose status UPDATE_BY_TOP_LEVEL")
 	@GetMapping("/status/update_by_top_level")
 	public ResponseEntity<List<BookingDTO>> getUpdateByTopLevelBookings() {
 		List<BookingDTO> bookings = bookingService.getUpdateByTopLevelBookings();
@@ -147,6 +155,7 @@ public class BookingController {
 	}
 
 	// End point for finding bookings whose status update_by_mid_level
+	@Operation(summary = "Get bookings whose status UPDATE_BY_MID_LEVEL")
 	@GetMapping("/status/update_by_mid_level")
 	public ResponseEntity<List<BookingDTO>> getUpdateByMidLevelBookings() {
 		List<BookingDTO> bookings = bookingService.getUpdateByMidLevelBookings();
@@ -154,6 +163,7 @@ public class BookingController {
 	}
 
 	// End point for finding bookings whose status updated_by_team_leader
+	@Operation(summary = "Get bookings whose status UPDATE_BY_TEAM_LEADER")
 	@GetMapping("/status/updated_by_team_leader")
 	public ResponseEntity<List<BookingDTO>> getUpdatedByTeamLeaderBookings() {
 		List<BookingDTO> bookings = bookingService.getUpdatedByTeamLeaderBookings();
@@ -161,6 +171,7 @@ public class BookingController {
 	}
 
 	// End point for finding bookings whose status assigned_by_temple_admin
+	@Operation(summary = "Get bookings whose status ASSIGNED_BY_TEMPLE_ADMIN")
 	@GetMapping("/status/assigned_by_temple_admin")
 	public ResponseEntity<List<BookingDTO>> getAssignedByTempleAdminBookings() {
 		List<BookingDTO> bookings = bookingService.getAssignedByTempleAdminBookings();
@@ -168,6 +179,7 @@ public class BookingController {
 	}
 
 	// Method to fetch bookings by mid-level user's ID
+	@Operation(summary = "Get booking details by MID_LEVEL's id")
 	@GetMapping("/midlevel/{midLevelId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsByMidLevelId(@PathVariable Long midLevelId) {
 		List<BookingDTO> bookings = bookingService.getBookingsByMidLevelId(midLevelId);
@@ -175,6 +187,7 @@ public class BookingController {
 	}
 
 	// Method to fetch bookings by Team Leader user's ID
+	@Operation(summary = "Get booking details by TEAM_LEADER's id")
 	@GetMapping("/teamLeader/{teamLeaderId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsByTeamLeaderId(@PathVariable Long teamLeaderId) {
 		List<BookingDTO> bookings = bookingService.getBookingsByteamLeaderId(teamLeaderId);
@@ -182,6 +195,7 @@ public class BookingController {
 	}
 
 	// Method to fetch bookings by Support Service user's ID
+	@Operation(summary = "Get booking details by SUPPORT_SERVICE's id")
 	@GetMapping("/support_service/{supportId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsBySupportId(@PathVariable Long supportId) {
 		List<BookingDTO> bookings = bookingService.getBookingsBySupportId(supportId);
@@ -189,6 +203,7 @@ public class BookingController {
 	}
 
 	// Method to fetch bookings by Temple Admin user's ID
+	@Operation(summary = "Get booking details by TEMPLE_ADMIN's id")
 	@GetMapping("/temple_admin/{templeAdminId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsByTempleAdminId(@PathVariable Long templeAdminId) {
 		List<BookingDTO> bookings = bookingService.getBookingsByTempleAdminId(templeAdminId);
@@ -196,6 +211,7 @@ public class BookingController {
 	}
 
 	// Method to fetch bookings by guide's user ID
+	@Operation(summary = "Get booking details by GUIDE's id")
 	@GetMapping("/guide/{guideId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsByGuideId(@PathVariable Long guideId) {
 		List<BookingDTO> bookings = bookingService.getBookingsByGuideId(guideId);
@@ -204,6 +220,7 @@ public class BookingController {
 
 	// End point to fetch associations (support service, temple admin, guide) for
 	// a given client id
+	@Operation(summary = "End point to fetch associations (support service, temple admin, guide) for a given client id")
 	@GetMapping("/associations/{clientId}")
 	public ResponseEntity<List<BookingAssociationDTO>> getAssociationsByClientId(@PathVariable Long clientId) {
 		List<BookingAssociationDTO> associations = bookingService.getAssociationsByClientId(clientId);
@@ -211,12 +228,14 @@ public class BookingController {
 	}
 
 	// Fetch Temple Admin By booking id
+	@Operation(summary = "Fetch Temple Admin By booking id")
 	@GetMapping("/{bookingId}/temple_admin")
 	public ResponseEntity<UserDTO> getAssignedTempleAdmin(@PathVariable Long bookingId) {
 		UserDTO templeAdmin = bookingService.getAssignedTempleAdminByBookingId(bookingId);
 		return ResponseEntity.ok(templeAdmin);
 	}
 
+	@Operation(summary = "Method by which update the booking status to CONFIRM")
 	@PutMapping("/confirm/{bookingId}")
 	public ResponseEntity<BookingDTO> confirmBookingByTopLevel(@PathVariable Long bookingId,
 			@RequestParam Long topLevelId) {
@@ -224,6 +243,7 @@ public class BookingController {
 		return ResponseEntity.ok(updatedBooking);
 	}
 
+	@Operation(summary = "Method by which update the booking status to COMPLETE")
 	@PutMapping("/complete/{bookingId}")
 	public ResponseEntity<BookingDTO> completeBooking(@PathVariable Long bookingId, @RequestParam Long guideId) {
 		BookingDTO updatedBooking = bookingService.completeBooking(bookingId, guideId);
@@ -232,6 +252,7 @@ public class BookingController {
 
 	// 📌 API: End point by which support service get bookings which he got
 	// assigned.....
+	@Operation(summary = "Method by which support service get bookings which he got assigned.....")
 	@GetMapping("/supportService/{supportServiceId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsBySupportServiceId(@PathVariable Long supportServiceId) {
 		List<BookingDTO> bookings = bookingService.getBookingsBySupportServiceId(supportServiceId);

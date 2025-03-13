@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cyfrifpro.DTO.TransportHelpMessageDTO;
 import com.cyfrifpro.service.TransportHelpMessageService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,6 +28,7 @@ public class TransportHelpMessageController {
 	}
 
 	// Endpoint for a user to post a help message
+	@Operation(summary = "Method to send a transpot help message by user")
 	@PostMapping("/post")
 	public ResponseEntity<TransportHelpMessageDTO> postHelpMessage(
 			@Valid @RequestBody TransportHelpMessageDTO helpMessageDTO) {
@@ -35,6 +37,7 @@ public class TransportHelpMessageController {
 	}
 
 	// Endpoint for admin to fetch all help messages
+	@Operation(summary = "Method to get all the transpoted requested messages")
 	@GetMapping("/all")
 	public ResponseEntity<List<TransportHelpMessageDTO>> getAllHelpMessages() {
 		List<TransportHelpMessageDTO> messages = helpMessageService.getAllHelpMessages();
@@ -42,6 +45,7 @@ public class TransportHelpMessageController {
 	}
 
 	// Optional: Endpoint to get help messages by user
+	@Operation(summary = "Method to get transpot help message by an user id")
 	@GetMapping("/by_user/{userId}")
 	public ResponseEntity<List<TransportHelpMessageDTO>> getHelpMessagesByUserId(@PathVariable Long userId) {
 		List<TransportHelpMessageDTO> messages = helpMessageService.getHelpMessagesByUserId(userId);

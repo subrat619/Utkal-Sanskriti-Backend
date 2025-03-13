@@ -3,6 +3,8 @@ package com.cyfrifpro.controller;
 import java.util.Map;
 import com.razorpay.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 //@CrossOrigin(origins="http://localhost:3000")
 public class Test {
 
+	@Operation(summary = "Method to Tset the Razor Pay payment integration")
 	@PostMapping("/create_order")
 	@ResponseBody
 	public String createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {

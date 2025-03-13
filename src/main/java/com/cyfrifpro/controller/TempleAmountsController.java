@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cyfrifpro.DTO.TempleAmountsDTO;
 import com.cyfrifpro.service.TempleAmountsService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,6 +33,7 @@ public class TempleAmountsController {
 
 	// Only TEMPLE_ADMIN can create amounts
 	@PreAuthorize("hasAnyRole('TEMPLE_ADMIN')")
+	@Operation(summary = "Method to post temple pooja amounts by TEMPLE_ADMIN")
 	@PostMapping("/add")
 	public ResponseEntity<TempleAmountsDTO> createTempleAmounts(@Valid @RequestBody TempleAmountsDTO dto) {
 		TempleAmountsDTO created = templeAmountsService.createTempleAmounts(dto);
@@ -40,6 +42,7 @@ public class TempleAmountsController {
 
 	// TOP_LEVEL and TEMPLE_ADMIN can update amounts
 	@PreAuthorize("hasAnyRole('TEMPLE_ADMIN','TOP_LEVEL')")
+	@Operation(summary = "Method to update temple pooja amounts by TEMPLE_ADMIN or TOP_LEVEL")
 	@PutMapping("/{templeId}")
 	public ResponseEntity<TempleAmountsDTO> updateTempleAmounts(@PathVariable Long templeId,
 			@Valid @RequestBody TempleAmountsDTO dto) {
@@ -47,6 +50,7 @@ public class TempleAmountsController {
 		return ResponseEntity.ok(updated);
 	}
 
+	@Operation(summary = "Method to get temple pooja amounts by temple id")
 	@GetMapping("/{templeId}")
 	public ResponseEntity<TempleAmountsDTO> getTempleAmounts(@PathVariable Long templeId) {
 		TempleAmountsDTO dto = templeAmountsService.getTempleAmountsByTempleId(templeId);
@@ -56,6 +60,7 @@ public class TempleAmountsController {
 	// Only TOP_LEVEL can delete amounts (if desired, you can also allow
 	// TEMPLE_ADMIN)
 	@PreAuthorize("hasAnyRole('TOP_LEVEL','TEMPLE_ADMIN')")
+	@Operation(summary = "Method to delete temple pooja amounts by TEMPLE_ADMIN or TOP_LEVEL")
 	@DeleteMapping("/{templeId}")
 	public ResponseEntity<Void> deleteTempleAmounts(@PathVariable Long templeId) {
 		templeAmountsService.deleteTempleAmounts(templeId);

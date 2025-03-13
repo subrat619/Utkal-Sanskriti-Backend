@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cyfrifpro.DTO.EventDTO;
 import com.cyfrifpro.service.EventService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,36 +35,42 @@ public class EventController {
 	}
 
 	@PreAuthorize("hasRole('TOP_LEVEL')")
+	@Operation(summary = "Method to create an event by TOP_LEVEL")
 	@PostMapping("/add")
 	public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO, @RequestParam Long topLevelId) {
 		EventDTO createdEvent = eventService.createEvent(eventDTO, topLevelId);
 		return ResponseEntity.ok(createdEvent);
 	}
 
+	@Operation(summary = "Method to update an event")
 	@PutMapping("/{eventId}")
 	public ResponseEntity<EventDTO> updateEvent(@PathVariable Long eventId, @Valid @RequestBody EventDTO eventDTO) {
 		EventDTO updatedEvent = eventService.updateEvent(eventId, eventDTO);
 		return ResponseEntity.ok(updatedEvent);
 	}
 
+	@Operation(summary = "Method to get an event details by event id")
 	@GetMapping("/{eventId}")
 	public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) {
 		EventDTO eventDTO = eventService.getEventById(eventId);
 		return ResponseEntity.ok(eventDTO);
 	}
 
+	@Operation(summary = "Method to get all events")
 	@GetMapping
 	public ResponseEntity<List<EventDTO>> getAllEvents() {
 		List<EventDTO> events = eventService.getAllEvents();
 		return ResponseEntity.ok(events);
 	}
 
+	@Operation(summary = "Method to delete an event by event id")
 	@DeleteMapping("/{eventId}")
 	public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
 		eventService.deleteEvent(eventId);
 		return ResponseEntity.noContent().build();
 	}
 
+	@Operation(summary = "Method to fetch an upcoming event")
 	@GetMapping("/upcoming")
 	public ResponseEntity<List<EventDTO>> getUpcomingEvents() {
 		List<EventDTO> upcomingEvents = eventService.getUpcomingEvents();
@@ -72,6 +79,7 @@ public class EventController {
 
 	// Endpoint for creating an event with image using multipart/form-data
 //	@PreAuthorize("hasRole('TOP_LEVEL')")
+	@Operation(summary = "Method to create an event with event image by TOP_LEVEL id")
 	@PostMapping(value = "/add-with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<EventDTO> createEventWithImage(@RequestParam("eventName") String eventName,
 			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,

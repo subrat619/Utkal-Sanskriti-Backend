@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cyfrifpro.DTO.DestinationDTO;
 import com.cyfrifpro.service.DestinationService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -36,12 +37,14 @@ public class DestinationController {
 //		return ResponseEntity.ok(popularDestinations);
 //	}
 
+	@Operation(summary = "Method for create popular destination")
 	@PostMapping
 	public ResponseEntity<DestinationDTO> createDestination(@Valid @RequestBody DestinationDTO destinationDTO) {
 		DestinationDTO createdDestination = destinationService.createDestination(destinationDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdDestination);
 	}
 
+	@Operation(summary = "Method for create popular destination with destination photo")
 	@PostMapping(value = "/upload", consumes = { "multipart/form-data" })
 	public ResponseEntity<DestinationDTO> createDestinationWithImage(@RequestParam("name") String name,
 			@RequestParam("location") String location, @RequestParam("description") String description,
@@ -56,12 +59,14 @@ public class DestinationController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdDestination);
 	}
 
+	@Operation(summary = "Method for get popular destination by id")
 	@GetMapping("/{id}")
 	public ResponseEntity<DestinationDTO> getDestinationById(@PathVariable Long id) {
 		DestinationDTO destinationDTO = destinationService.getDestinationById(id);
 		return ResponseEntity.ok(destinationDTO);
 	}
 
+	@Operation(summary = "Method for get all popular destination")
 	@GetMapping
 	public ResponseEntity<List<DestinationDTO>> getAllDestinations() {
 		List<DestinationDTO> destinations = destinationService.getAllDestinations();

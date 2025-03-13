@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.service.TempleDetailsService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -40,6 +42,7 @@ public class TempleDetailsController {
 
 	// Allowed for MID_LEVEL, TEMPLE_ADMIN, and TOP_LEVEL
 	@PreAuthorize("hasAnyRole('TOP_LEVEL')")
+	@Operation(summary = "Method to create temple by TOP_LEVEL")
 	@PostMapping("/add")
 	public ResponseEntity<TempleDetailsDTO> createTempleDetails(@Valid @RequestBody TempleDetailsDTO dto) {
 		TempleDetailsDTO created = templeDetailsService.createTempleDetails(dto);
@@ -47,6 +50,7 @@ public class TempleDetailsController {
 	}
 
 //	@PreAuthorize("hasAnyRole('TOP_LEVEL')")
+	@Operation(summary = "Method to create temple with temple details by TOP_LEVEL")
 	@PostMapping("/add_with_image")
 	public ResponseEntity<TempleDetailsDTO> createTempleDetailsWithImage(@RequestParam("name") String name,
 			@RequestParam("location") String location, @RequestParam("description") String description,
@@ -64,6 +68,7 @@ public class TempleDetailsController {
 	}
 
 	@PreAuthorize("hasAnyRole('MID_LEVEL','TEMPLE_ADMIN','TOP_LEVEL')")
+	@Operation(summary = "Method to update temple details by TOP_LEVEL or TEMPLE_ADMIN or MID_LEVEL with temple id")
 	@PutMapping("/{id}")
 	public ResponseEntity<TempleDetailsDTO> updateTempleDetails(@PathVariable Long id,
 			@Valid @RequestBody TempleDetailsDTO dto) {
@@ -71,12 +76,14 @@ public class TempleDetailsController {
 		return ResponseEntity.ok(updated);
 	}
 
+	@Operation(summary = "Method to get temple details by temple id")
 	@GetMapping("/{id}")
 	public ResponseEntity<TempleDetailsDTO> getTempleDetails(@PathVariable Long id) {
 		TempleDetailsDTO dto = templeDetailsService.getTempleDetailsById(id);
 		return ResponseEntity.ok(dto);
 	}
 
+	@Operation(summary = "Method to get temple details")
 	@GetMapping("/all")
 	public ResponseEntity<List<TempleDetailsDTO>> getAllTempleDetails() {
 		List<TempleDetailsDTO> dtos = templeDetailsService.getAllTempleDetails();
@@ -84,18 +91,21 @@ public class TempleDetailsController {
 	}
 
 	@PreAuthorize("hasAnyRole('MID_LEVEL','TEMPLE_ADMIN','TOP_LEVEL')")
+	@Operation(summary = "Method to delete temple by trmple id ( to delete temple only authorization have MID_LEVEL or TEMPLE_ADMIN or TOP_LEVEL. )")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteTempleDetails(@PathVariable Long id) {
 		templeDetailsService.deleteTempleDetails(id);
 		return ResponseEntity.noContent().build();
 	}
 
+	@Operation(summary = "Method to get temples by district name")
 	@GetMapping("/by_district/{districtName}")
 	public ResponseEntity<List<TempleDetailsDTO>> getTemplesByDistrict(@PathVariable String districtName) {
 		List<TempleDetailsDTO> temples = templeDetailsService.getTemplesByDistrict(districtName);
 		return ResponseEntity.ok(temples);
 	}
 
+	@Operation(summary = "Method to get temples by district names ( It can get by Multiple district names togather. )")
 	@GetMapping("/by_districts")
 	public ResponseEntity<List<TempleDetailsDTO>> getTemplesByDistricts(@RequestParam String districts) {
 		// Split the comma-separated list into a Collection
@@ -104,6 +114,7 @@ public class TempleDetailsController {
 		return ResponseEntity.ok(temples);
 	}
 
+	@Operation(summary = "Method to get temple by tample name")
 	@GetMapping("/search")
 	public ResponseEntity<List<TempleDetailsDTO>> searchTemplesByName(@RequestParam("name") String name) {
 		List<TempleDetailsDTO> dtos = templeDetailsService.searchTemplesByName(name);
@@ -116,6 +127,7 @@ public class TempleDetailsController {
 //        return ResponseEntity.ok(temples);
 //    }
 
+	@Operation(summary = "Method to fetch popular temples")
 	@GetMapping("/popular")
 	public ResponseEntity<List<PopularTempleDTO>> getPopularTemples() {
 		List<PopularTempleDTO> popularTemples = templeDetailsService.getPopularTemples();

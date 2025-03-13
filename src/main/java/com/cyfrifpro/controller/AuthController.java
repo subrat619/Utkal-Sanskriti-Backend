@@ -34,6 +34,7 @@ import com.cyfrifpro.service.UserService;
 import com.cyfrifpro.service.UserService2;
 import com.cyfrifpro.util.SecurityUtils;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -64,6 +65,7 @@ public class AuthController {
 	}
 
 	// Register
+	@Operation(summary = "Method for registration... 👍")
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, Object>> registerHandler(@Valid @RequestBody UserDTO userDTO) {
 		try {
@@ -90,6 +92,7 @@ public class AuthController {
 	}
 
 	// login
+	@Operation(summary = "Method for login... 👍")
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginHandler(@Valid @RequestBody LoginCredentials credentials) {
 		try {
@@ -120,6 +123,7 @@ public class AuthController {
 	}
 
 	// Forget password
+	@Operation(summary = "Method for forget password... 👍")
 	@PostMapping("/forgot_password")
 	public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
 		try {
@@ -134,6 +138,7 @@ public class AuthController {
 	}
 
 	// Reset password through otp
+	@Operation(summary = "Method for reset password through otp... 👍")
 	@PostMapping("/reset_password")
 	public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
 		try {
@@ -148,6 +153,7 @@ public class AuthController {
 	}
 
 	// Change password without otp
+	@Operation(summary = "Method for change password... 👍")
 	@PostMapping("/change_password")
 	public ResponseEntity<Map<String, String>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
 		try {
@@ -172,6 +178,7 @@ public class AuthController {
 	}
 
 	// Change password with otp
+	@Operation(summary = "Method for change password through old password... 👍")
 	@PostMapping("/reset_password_old")
 	public ResponseEntity<Map<String, String>> resetPasswordWithOldPassword(
 			@Valid @RequestBody ResetPasswordWithOldPasswordRequest request) {
@@ -190,6 +197,7 @@ public class AuthController {
 		}
 	}
 
+	@Operation(summary = "Method for register temple admin with temple... 👍")
 	@PostMapping("/register_temple_admin_with_temple")
 	public ResponseEntity<Map<String, Object>> registerTempleAdminMapping(
 			@Valid @RequestBody TempleAdminMappingRequest request) {

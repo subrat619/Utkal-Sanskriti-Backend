@@ -17,6 +17,7 @@ import com.cyfrifpro.DTO.MembershipPaymentResponse;
 import com.cyfrifpro.service.MembershipService;
 import com.cyfrifpro.service.PaymentService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,6 +35,7 @@ public class MembershipController {
 		this.paymentService = paymentService;
 	}
 
+	@Operation(summary = "Method for take member ship for special treat")
 	@PostMapping
 	public ResponseEntity<MembershipPaymentResponse> subscribeMembership(
 			@Valid @RequestBody MembershipDTO membershipDTO) {
@@ -55,6 +57,7 @@ public class MembershipController {
 	}
 
 	// Endpoint for retrieving membership details by client ID
+	@Operation(summary = "Method for retrieving membership details by client ID")
 	@GetMapping("/{clientId}")
 	public ResponseEntity<MembershipDTO> getMembershipByClientId(@PathVariable Long clientId) {
 		MembershipDTO membership = membershipService.getMembershipByClientId(clientId);
@@ -62,6 +65,7 @@ public class MembershipController {
 	}
 
 	// New endpoint to fetch all active memberships
+	@Operation(summary = "Method to fetch all active memberships")
 	@GetMapping("/active")
 	public ResponseEntity<List<MembershipDTO>> getActiveMemberships() {
 		List<MembershipDTO> activeMemberships = membershipService.getActiveMemberships();

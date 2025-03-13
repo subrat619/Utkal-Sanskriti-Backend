@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cyfrifpro.model.District;
 import com.cyfrifpro.service.DistrictService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/districts")
 //@CrossOrigin(origins = "http://localhost:3000")
@@ -24,6 +26,7 @@ public class DistrictController {
 	}
 
 	// Endpoint to add a single district
+	@Operation(summary = "Method for create single district")
 	@PostMapping
 	public ResponseEntity<District> addDistrict(@RequestBody District district) {
 		District savedDistrict = districtService.addDistrict(district);
@@ -31,6 +34,7 @@ public class DistrictController {
 	}
 
 	// Endpoint to fetch all districts
+	@Operation(summary = "Method for get all districts")
 	@GetMapping
 	public ResponseEntity<List<District>> getAllDistricts() {
 		List<District> districts = districtService.getAllDistricts();
@@ -38,6 +42,7 @@ public class DistrictController {
 	}
 
 	// New endpoint for adding multiple districts at once
+	@Operation(summary = "Method for create multiple districts at once")
 	@PostMapping("/bulk")
 	public ResponseEntity<List<District>> addAllDistricts(@RequestBody List<District> districts) {
 		List<District> savedDistricts = districtService.addAllDistricts(districts);
