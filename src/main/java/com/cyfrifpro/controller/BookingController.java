@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import com.cyfrifpro.DTO.BookingDTO;
 import com.cyfrifpro.DTO.UserDTO;
 import com.cyfrifpro.service.BookingService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -35,6 +35,7 @@ public class BookingController {
 	}
 
 	// Create a new booking. The clientId can be passed as a request parameter.
+	@Operation(summary = "Create a New Booking", description = "Create a new booking. The clientId can be passed as a request parameter.")
 	@PostMapping
 	public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingDTO bookingDTO,
 			@RequestParam Long clientId) {
@@ -43,6 +44,7 @@ public class BookingController {
 	}
 
 	// Update an existing booking (for simplicity, updating only booking date here)
+	@Operation(summary = "Update an existing booking by booking id")
 	@PutMapping("/{bookingId}")
 	public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long bookingId,
 			@Valid @RequestBody BookingDTO bookingDTO) {
@@ -51,12 +53,14 @@ public class BookingController {
 	}
 
 	// Get a booking by its id
+	@Operation(summary = "Get a booking by its id")
 	@GetMapping("/{bookingId}")
 	public ResponseEntity<BookingDTO> getBooking(@PathVariable Long bookingId) {
 		BookingDTO booking = bookingService.getBookingById(bookingId);
 		return ResponseEntity.ok(booking);
 	}
 
+	@Operation(summary = "Get a booking by client id")
 	@GetMapping("/client/{clientId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsByClientId(@PathVariable Long clientId) {
 		List<BookingDTO> bookings = bookingService.getBookingsByClientId(clientId);
@@ -64,6 +68,7 @@ public class BookingController {
 	}
 
 	// Get all bookings
+	@Operation(summary = "Get all booking")
 	@GetMapping
 	public ResponseEntity<List<BookingDTO>> getAllBookings() {
 		List<BookingDTO> bookings = bookingService.getAllBookings();
@@ -72,6 +77,7 @@ public class BookingController {
 
 	// Endpoint for top level who assign the mid level
 //	@PreAuthorize("hasRole('TOP_LEVEL')")
+	@Operation(summary = "Assigning MID_LEVEL by TOP_LEVEL")
 	@PutMapping("/assign_by_top_level/{bookingId}")
 	public ResponseEntity<BookingDTO> updateBookingByTopLevel(@PathVariable Long bookingId,
 			@Valid @RequestBody BookingDTO bookingDTO, @RequestParam Long topLevelId) {
@@ -224,28 +230,32 @@ public class BookingController {
 		return ResponseEntity.ok(updatedBooking);
 	}
 
-	// End point by which support service get bookings which he got assigned.....
+	// 📌 API: End point by which support service get bookings which he got
+	// assigned.....
 	@GetMapping("/supportService/{supportServiceId}")
 	public ResponseEntity<List<BookingDTO>> getBookingsBySupportServiceId(@PathVariable Long supportServiceId) {
 		List<BookingDTO> bookings = bookingService.getBookingsBySupportServiceId(supportServiceId);
 		return ResponseEntity.ok(bookings);
 	}
 
-	// Endpoint to fetch assigned guide details by client ID
+	// 📌 API: Fetch assigned guide details by client ID
+	@Operation(summary = "Get Assigned Guide Details", description = "Fetches details of the assigned guide for a client by client ID.")
 	@GetMapping("/by_client/{clientId}/assigned_guide")
 	public ResponseEntity<List<UserDTO>> getAssignedGuideDetailsByClientId(@PathVariable Long clientId) {
 		List<UserDTO> guideDetails = bookingService.getAssignedGuideDetailsByClientId(clientId);
 		return ResponseEntity.ok(guideDetails);
 	}
 
-	// Endpoint to fetch assigned temple admin details by client ID
+	// 📌 API: Fetch assigned temple admin details by client ID
+	@Operation(summary = "Get Assigned Temple Admin Details", description = "Fetches details of the assigned temple admin for a client by client ID.")
 	@GetMapping("/by_client/{clientId}/temple_admin")
 	public ResponseEntity<List<UserDTO>> getAssignedTempleAdminDetailsByClientId(@PathVariable Long clientId) {
 		List<UserDTO> templeAdminDetails = bookingService.getAssignedTempleAdminDetailsByClientId(clientId);
 		return ResponseEntity.ok(templeAdminDetails);
 	}
 
-	// Endpoint to fetch assigned support service details by client ID
+	// 📌 API: Fetch assigned support service details by client ID
+	@Operation(summary = "Get Assigned Support Service Details", description = "Fetches details of the assigned support service for a client by client ID.")
 	@GetMapping("/by_client/{clientId}/support_service")
 	public ResponseEntity<List<UserDTO>> getAssignedSupportServiceDetailsByClientId(@PathVariable Long clientId) {
 		List<UserDTO> supportServiceDetails = bookingService.getAssignedSupportServiceDetailsByClientId(clientId);

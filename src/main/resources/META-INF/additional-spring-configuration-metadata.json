@@ -13,5 +13,10 @@
     "name": "master.email",
     "type": "java.lang.String",
     "description": "A description for 'master.email'"
+  },
+  {
+    "name": "cors.allowed.origin",
+    "type": "java.lang.String",
+    "description": "A description for 'cors.allowed.origin'"
   }
 ]}
