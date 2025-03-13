@@ -1,14 +1,27 @@
 package com.cyfrifpro.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "bookings")
@@ -56,13 +69,17 @@ public class Booking {
 	@ManyToOne(fetch = FetchType.LAZY) //
 	@JoinColumn(name = "updated_by_top_level_id") // Top level id who assign the mid level
 	private User topLevel; //
-	
+
 	@ManyToOne(fetch = FetchType.LAZY) //
 	@JoinColumn(name = "updated_by_temple_admin_id") // Temple admin id who assign the guide
 	private User templeAdmin; //
 
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
+
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "destination_id")
+//	private Destination destination;
 
 	@PrePersist
 	protected void onCreate() {

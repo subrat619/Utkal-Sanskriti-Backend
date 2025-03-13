@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cyfrifpro.DTO.PopularTempleDTO;
 import com.cyfrifpro.DTO.TempleDetailsDTO;
 import com.cyfrifpro.service.TempleDetailsService;
-
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,6 +31,9 @@ import jakarta.validation.Valid;
 public class TempleDetailsController {
 
 	private final TempleDetailsService templeDetailsService;
+
+//	@Autowired
+//	private TempleSearchService templeSearchService;
 
 	public TempleDetailsController(TempleDetailsService templeDetailsService) {
 		this.templeDetailsService = templeDetailsService;
@@ -108,6 +110,12 @@ public class TempleDetailsController {
 		List<TempleDetailsDTO> dtos = templeDetailsService.searchTemplesByName(name);
 		return ResponseEntity.ok(dtos);
 	}
+
+//	@GetMapping("/search")
+//    public ResponseEntity<List<TempleDetailsDTO>> searchTemples(@RequestParam("name") String name) {
+//        List<TempleDetailsDTO> temples = templeSearchService.searchTemplesByName(name);
+//        return ResponseEntity.ok(temples);
+//    }
 
 	@GetMapping("/popular")
 	public ResponseEntity<List<PopularTempleDTO>> getPopularTemples() {
