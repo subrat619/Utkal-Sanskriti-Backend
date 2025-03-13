@@ -11,7 +11,7 @@ import com.cyfrifpro.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/test-notification")
-@CrossOrigin(origins="http://localhost:3000")
+//@CrossOrigin(origins="http://localhost:3000")
 public class TestNotificationController {
 
 	private final NotificationService notificationService;

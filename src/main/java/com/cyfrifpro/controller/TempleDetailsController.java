@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/temple_details")
 @Validated
-@CrossOrigin(origins = "http://127.0.0.1:5500/")
+//@CrossOrigin(origins = "http://127.0.0.1:5500/")
 public class TempleDetailsController {
 
 	private final TempleDetailsService templeDetailsService;

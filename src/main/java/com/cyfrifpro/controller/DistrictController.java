@@ -15,7 +15,7 @@ import com.cyfrifpro.service.DistrictService;
 
 @RestController
 @RequestMapping("/api/districts")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class DistrictController {
 
 	private final DistrictService districtService;

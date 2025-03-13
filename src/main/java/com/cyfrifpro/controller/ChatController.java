@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.cyfrifpro.DTO.MessageDTO;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:5500")
+//@CrossOrigin(origins = "http://localhost:5500")
 public class ChatController {
 
 	@MessageMapping("/chat")

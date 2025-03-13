@@ -12,7 +12,7 @@ import com.cyfrifpro.service.TempleCombinedService;
 
 @RestController
 @RequestMapping("/api/temples")
-@CrossOrigin(origins="http://localhost:3000")
+//@CrossOrigin(origins="http://localhost:3000")
 public class TempleCombinedController {
 
 	private final TempleCombinedService templeCombinedService;

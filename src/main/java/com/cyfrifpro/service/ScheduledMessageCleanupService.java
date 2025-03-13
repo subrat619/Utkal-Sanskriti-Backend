@@ -40,13 +40,13 @@ public class ScheduledMessageCleanupService {
 
 	// Scheduled to run daily at 2 AM
 	@Scheduled(cron = "0 0 2 * * *")
-	// Scheduled to run after 5 minutes
-//	@Scheduled(cron = "0 */3 * * * *")
+	// Scheduled to run after 2 minutes
+//	@Scheduled(cron = "0 */2 * * * *")
 	@Transactional
 	public void processOldMessages() {
 
-		LocalDateTime cutoff = LocalDateTime.now().minusMonths(1);
-//		LocalDateTime cutoff = LocalDateTime.now().minusMinutes(3);
+//		LocalDateTime cutoff = LocalDateTime.now().minusMonths(1);
+		LocalDateTime cutoff = LocalDateTime.now().minusMinutes(3);
 
 		logger.info("Starting scheduled task to process messages older than {}", cutoff);
 
@@ -87,7 +87,7 @@ public class ScheduledMessageCleanupService {
 				String email1 = user1Opt.get().getEmail();
 				String email2 = user2Opt.get().getEmail();
 				String subject = "Monthly Chat History";
-//				String subject = "5 Minute Chat History";
+//				String subject = "2 Minute Chat History";
 
 				// Send email to both participants
 				emailService.sendEmail(email1, subject, emailBody.toString());
