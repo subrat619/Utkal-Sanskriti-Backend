@@ -92,7 +92,7 @@ public class AuthController {
 	}
 
 	// login
-	@Operation(summary = "Method for login... 👍")
+	@Operation(summary = "Method for login... ☠️")
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginHandler(@Valid @RequestBody LoginCredentials credentials) {
 		try {
@@ -178,7 +178,7 @@ public class AuthController {
 	}
 
 	// Change password with otp
-	@Operation(summary = "Method for change password through old password and otp... 👍")
+	@Operation(summary = "Method for change password through old password and otp... 😎")
 	@PostMapping("/reset_password_old")
 	public ResponseEntity<Map<String, String>> resetPasswordWithOldPassword(
 			@Valid @RequestBody ResetPasswordWithOldPasswordRequest request) {
@@ -197,7 +197,7 @@ public class AuthController {
 		}
 	}
 
-	@Operation(summary = "Method for register temple admin with temple... 👍")
+	@Operation(summary = "Method for register temple admin with temple... ")
 	@PostMapping("/register_temple_admin_with_temple")
 	public ResponseEntity<Map<String, Object>> registerTempleAdminMapping(
 			@Valid @RequestBody TempleAdminMappingRequest request) {
