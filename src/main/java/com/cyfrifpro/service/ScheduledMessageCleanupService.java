@@ -45,8 +45,8 @@ public class ScheduledMessageCleanupService {
 	@Transactional
 	public void processOldMessages() {
 
-//		LocalDateTime cutoff = LocalDateTime.now().minusMonths(1);
-		LocalDateTime cutoff = LocalDateTime.now().minusMinutes(3);
+		LocalDateTime cutoff = LocalDateTime.now().minusMonths(1);
+//		LocalDateTime cutoff = LocalDateTime.now().minusMinutes(3);
 
 		logger.info("Starting scheduled task to process messages older than {}", cutoff);
 
