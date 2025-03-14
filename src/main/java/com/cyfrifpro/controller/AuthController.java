@@ -123,7 +123,7 @@ public class AuthController {
 	}
 
 	// Forget password
-	@Operation(summary = "Method for forget password... 👍")
+	@Operation(summary = "Method for forget password... 👍. After hit this end point an otp goes to your mail.")
 	@PostMapping("/forgot_password")
 	public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
 		try {
@@ -138,7 +138,7 @@ public class AuthController {
 	}
 
 	// Reset password through otp
-	@Operation(summary = "Method for reset password through otp... 👍")
+	@Operation(summary = "Method for reset password through otp... 👍. Through this end point verify your otp and reset password.")
 	@PostMapping("/reset_password")
 	public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
 		try {
@@ -153,7 +153,7 @@ public class AuthController {
 	}
 
 	// Change password without otp
-	@Operation(summary = "Method for change password... 👍")
+	@Operation(summary = "Method for change password... 👍. It changes the password without otp , it only required old password.")
 	@PostMapping("/change_password")
 	public ResponseEntity<Map<String, String>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
 		try {
@@ -178,7 +178,7 @@ public class AuthController {
 	}
 
 	// Change password with otp
-	@Operation(summary = "Method for change password through old password... 👍")
+	@Operation(summary = "Method for change password through old password and otp... 👍")
 	@PostMapping("/reset_password_old")
 	public ResponseEntity<Map<String, String>> resetPasswordWithOldPassword(
 			@Valid @RequestBody ResetPasswordWithOldPasswordRequest request) {
