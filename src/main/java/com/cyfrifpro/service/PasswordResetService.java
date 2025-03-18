@@ -9,4 +9,8 @@ public interface PasswordResetService {
 	void resetPassword(ResetPasswordRequest request);
 
 	void resetPasswordWithOldPassword(ResetPasswordWithOldPasswordRequest request);
+
+	void verifyOtp(String email, String otp);
+
+	void changePasswordAfterOtpVerification(String email, String newPassword, String confirmNewPassword);
 }

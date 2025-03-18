@@ -26,6 +26,7 @@ import com.cyfrifpro.DTO.ResetPasswordRequest;
 import com.cyfrifpro.DTO.ResetPasswordWithOldPasswordRequest;
 import com.cyfrifpro.DTO.TempleAdminMappingRequest;
 import com.cyfrifpro.DTO.UserDTO;
+import com.cyfrifpro.DTO.VerifyOtpRequest;
 import com.cyfrifpro.config.JWTUtil;
 import com.cyfrifpro.model.User;
 import com.cyfrifpro.repository.UserRepository;
@@ -205,4 +206,35 @@ public class AuthController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Verify OTP", description = "Verifies the OTP sent to the user's email without changing the password.")
+	@PostMapping("/verify_otp")
+	public ResponseEntity<Map<String, String>> verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
+		try {
+			passwordResetService.verifyOtp(request.getEmail(), request.getOtp());
+			return ResponseEntity.ok(Collections.singletonMap("message", "OTP is valid."));
+		} catch (RuntimeException e) {
+			logger.error("OTP verification error: ", e);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("error", e.getMessage()));
+		}
+	}
+
+	@Operation(summary = "Change Password After OTP Verification", description = "Changes the user's password after OTP has been verified, without needing to send the OTP again. Requires 'email', 'newPassword', and 'confirmNewPassword'.")
+	@PostMapping("/change_password_after_verification")
+	public ResponseEntity<Map<String, String>> changePasswordAfterVerification(
+			@Valid @RequestBody Map<String, String> request) {
+		// Expecting a JSON object with keys "email", "newPassword",
+		// "confirmNewPassword"
+		String email = request.get("email");
+		String newPassword = request.get("newPassword");
+		String confirmNewPassword = request.get("confirmNewPassword");
+		try {
+			passwordResetService.changePasswordAfterOtpVerification(email, newPassword, confirmNewPassword);
+			return ResponseEntity.ok(Collections.singletonMap("message", "Password changed successfully."));
+		} catch (RuntimeException e) {
+			logger.error("Error changing password: ", e);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("error", e.getMessage()));
+		}
+	}
 }

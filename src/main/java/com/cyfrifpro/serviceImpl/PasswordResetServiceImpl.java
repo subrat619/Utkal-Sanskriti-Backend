@@ -28,9 +28,11 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 	private final PasswordEncoder passwordEncoder;
 	private final EmailService emailService;
 
-	// In-memory storage for OTPs (email -> OTP). In production, use a persistent
-	// store with expiration.
+	// In-memory storage for OTPs (email -> OTP)
 	private final ConcurrentHashMap<String, String> otpStorage = new ConcurrentHashMap<>();
+
+	// In-memory storage for verified emails (after OTP verification)
+	private final ConcurrentHashMap<String, Boolean> verifiedEmails = new ConcurrentHashMap<>();
 
 	public PasswordResetServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			EmailService emailService) {
@@ -46,17 +48,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 		System.out.println(user);
-
 		// Generate a 6-digit OTP
 		String otp = String.format("%06d", new Random().nextInt(999999));
 		otpStorage.put(email, otp);
 		logger.info("Generated OTP {} for email {}", otp, email);
-
 		// Prepare email content
 		String subject = "Password Reset OTP";
-		String body = "Dear user,\n\nYour OTP for password reset is: " + otp + "\n\nRegards,\nUtkal Sanskriti Support";
-
-		// Send email
+		String body = "Dear user,\n\nYour OTP for password reset is: " + otp + "\n\nRegards,\nSupport Team";
 		emailService.sendEmail(email, subject, body);
 		logger.info("OTP email sent to {}", email);
 	}
@@ -68,48 +66,64 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 		if (storedOtp == null || !storedOtp.equals(request.getOtp())) {
 			throw new RuntimeException("Invalid or expired OTP");
 		}
-
-		// OTP is valid, update user's password
 		User user = userRepository.findByEmail(request.getEmail())
 				.orElseThrow(() -> new RuntimeException("User not found with email: " + request.getEmail()));
-
 		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 		userRepository.save(user);
 		otpStorage.remove(request.getEmail());
+		// Also remove from verifiedEmails if present
+		verifiedEmails.remove(request.getEmail());
 		logger.info("Password reset successful for email {}", request.getEmail());
 	}
 
 	@Override
 	public void resetPasswordWithOldPassword(ResetPasswordWithOldPasswordRequest request) {
-		// Retrieve the OTP from the in-memory store
 		String storedOtp = otpStorage.get(request.getEmail());
 		if (storedOtp == null || !storedOtp.equals(request.getOtp())) {
 			logger.warn("Invalid or expired OTP for email {}", request.getEmail());
 			throw new IllegalArgumentException("Invalid or expired OTP");
 		}
-
-		// Retrieve user by email
 		User user = userRepository.findByEmail(request.getEmail())
 				.orElseThrow(() -> new IllegalArgumentException("User not found with email: " + request.getEmail()));
-
-		// Verify that the provided old password matches the stored password
 		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
 			logger.warn("Old password does not match for email {}", request.getEmail());
 			throw new IllegalArgumentException("Old password is incorrect");
 		}
-
-		// Verify that new password and confirm new password match
 		if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
 			logger.warn("New password and confirmation do not match for email {}", request.getEmail());
 			throw new IllegalArgumentException("New password and confirmation do not match");
 		}
-
-		// Update the user's password
 		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 		userRepository.save(user);
-
-		// Remove the OTP after successful reset
 		otpStorage.remove(request.getEmail());
+		verifiedEmails.remove(request.getEmail());
 		logger.info("Password reset successfully for email {}", request.getEmail());
+	}
+
+	@Override
+	public void verifyOtp(String email, String otp) {
+		String storedOtp = otpStorage.get(email);
+		if (storedOtp == null || !storedOtp.equals(otp)) {
+			throw new RuntimeException("Invalid or expired OTP");
+		}
+		// Mark the email as verified
+		verifiedEmails.put(email, Boolean.TRUE);
+		logger.info("OTP verified for email {}", email);
+	}
+
+	@Override
+	public void changePasswordAfterOtpVerification(String email, String newPassword, String confirmNewPassword) {
+		if (!newPassword.equals(confirmNewPassword)) {
+			throw new RuntimeException("New password and confirm new password do not match");
+		}
+		if (!verifiedEmails.containsKey(email)) {
+			throw new RuntimeException("OTP not verified for email: " + email);
+		}
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		verifiedEmails.remove(email);
+		logger.info("Password changed successfully for email {}", email);
 	}
 }
